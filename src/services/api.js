@@ -1,8 +1,5 @@
 import axios from 'axios';
 
-// IMPORTANTE: Substitua pelo IP da sua máquina
-// Para descobrir seu IP no Windows, abra o CMD e digite: ipconfig
-// Procure por "Endereço IPv4" na sua conexão de rede
 const API_URL = 'http://192.168.56.1:8080/api';
 
 const api = axios.create({
@@ -13,7 +10,6 @@ const api = axios.create({
   },
 });
 
-// Interceptor para log de requisições (útil para debug)
 api.interceptors.request.use(
   (config) => {
     console.log('Requisição:', config.method.toUpperCase(), config.url);
@@ -24,7 +20,6 @@ api.interceptors.request.use(
   }
 );
 
-// Interceptor para tratamento de erros
 api.interceptors.response.use(
   (response) => response,
   (error) => {

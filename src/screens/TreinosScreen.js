@@ -21,7 +21,6 @@ export default function TreinosScreen({ navigation }) {
     carregarTreinos();
   }, []);
 
-  // Recarregar quando voltar para a tela
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       carregarTreinos();

@@ -19,7 +19,6 @@ export default function NovoTreinoScreen({ navigation }) {
   const [observacoes, setObservacoes] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Dados fixos para teste - SUBSTITUA pelo ID do usuário logado
   const USUARIO_ID = 1;
 
   const tiposTreino = [

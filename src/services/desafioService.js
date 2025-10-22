@@ -1,7 +1,6 @@
 import api from './api';
 
 const desafioService = {
-  // Criar novo desafio
   criar: async (dados) => {
     try {
       const response = await api.post('/desafios', dados);
@@ -11,7 +10,6 @@ const desafioService = {
     }
   },
 
-  // Buscar desafio por ID
   buscarPorId: async (id) => {
     try {
       const response = await api.get(`/desafios/${id}`);
@@ -21,7 +19,6 @@ const desafioService = {
     }
   },
 
-  // Listar todos os desafios
   listarTodos: async () => {
     try {
       const response = await api.get('/desafios');
@@ -31,7 +28,6 @@ const desafioService = {
     }
   },
 
-  // Listar desafios paginados
   listarPaginado: async (page = 0, size = 10) => {
     try {
       const response = await api.get(`/desafios/paginado?page=${page}&size=${size}`);
@@ -41,7 +37,6 @@ const desafioService = {
     }
   },
 
-  // Buscar desafios por status
   buscarPorStatus: async (status) => {
     try {
       const response = await api.get(`/desafios/status/${status}`);
@@ -51,7 +46,6 @@ const desafioService = {
     }
   },
 
-  // Atualizar desafio
   atualizar: async (id, dados) => {
     try {
       const response = await api.put(`/desafios/${id}`, dados);
@@ -61,7 +55,6 @@ const desafioService = {
     }
   },
 
-  // Deletar desafio
   deletar: async (id) => {
     try {
       await api.delete(`/desafios/${id}`);

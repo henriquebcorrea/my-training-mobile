@@ -1,7 +1,6 @@
 import api from './api';
 
 const usuarioService = {
-  // Criar novo usuário
   criar: async (dados) => {
     try {
       const response = await api.post('/usuarios', dados);
@@ -11,7 +10,6 @@ const usuarioService = {
     }
   },
 
-  // Buscar usuário por ID
   buscarPorId: async (id) => {
     try {
       const response = await api.get(`/usuarios/${id}`);
@@ -21,7 +19,6 @@ const usuarioService = {
     }
   },
 
-  // Buscar usuário por email
   buscarPorEmail: async (email) => {
     try {
       const response = await api.get(`/usuarios/email/${email}`);
@@ -31,7 +28,6 @@ const usuarioService = {
     }
   },
 
-  // Listar todos os usuários
   listarTodos: async () => {
     try {
       const response = await api.get('/usuarios');
@@ -41,7 +37,6 @@ const usuarioService = {
     }
   },
 
-  // Atualizar usuário
   atualizar: async (id, dados) => {
     try {
       const response = await api.put(`/usuarios/${id}`, dados);
@@ -51,7 +46,6 @@ const usuarioService = {
     }
   },
 
-  // Deletar usuário
   deletar: async (id) => {
     try {
       await api.delete(`/usuarios/${id}`);
@@ -61,7 +55,6 @@ const usuarioService = {
     }
   },
 
-  // Adicionar desafio ao usuário
   adicionarDesafio: async (usuarioId, desafioId) => {
     try {
       const response = await api.post(`/usuarios/${usuarioId}/desafios/${desafioId}`);
@@ -71,7 +64,6 @@ const usuarioService = {
     }
   },
 
-  // Remover desafio do usuário
   removerDesafio: async (usuarioId, desafioId) => {
     try {
       const response = await api.delete(`/usuarios/${usuarioId}/desafios/${desafioId}`);
