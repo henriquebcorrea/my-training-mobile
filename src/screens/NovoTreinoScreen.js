@@ -1,16 +1,17 @@
-import React, { useState } from 'react';
+import { Ionicons } from '@expo/vector-icons';
+import { useState } from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
+  ActivityIndicator,
+  Alert,
   ScrollView,
+  StyleSheet,
+  Text,
   TextInput,
   TouchableOpacity,
-  Alert,
-  ActivityIndicator,
+  View,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import treinoService from '../services/treinoService';
+// MODO MOCK - Trocar para services reais quando backend estiver pronto
+import { mockTreinoService as treinoService } from '../services/mockData';
 
 export default function NovoTreinoScreen({ navigation }) {
   const [tipo, setTipo] = useState('MUSCULACAO');
@@ -19,6 +20,7 @@ export default function NovoTreinoScreen({ navigation }) {
   const [observacoes, setObservacoes] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // Dados fixos para teste - SUBSTITUA pelo ID do usuário logado
   const USUARIO_ID = 1;
 
   const tiposTreino = [

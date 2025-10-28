@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import { Ionicons } from '@expo/vector-icons';
+import { useEffect, useState } from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
   ActivityIndicator,
   RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import treinoService from '../services/treinoService';
-import desafioService from '../services/desafioService';
+// MODO MOCK - Trocar para services reais quando backend estiver pronto
+import { mockDesafioService as desafioService, mockTreinoService as treinoService } from '../services/mockData';
 
 export default function HomeScreen({ navigation }) {
   const [treinos, setTreinos] = useState([]);
@@ -21,6 +21,13 @@ export default function HomeScreen({ navigation }) {
   useEffect(() => {
     carregarDados();
   }, []);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      carregarDados();
+    });
+    return unsubscribe;
+  }, [navigation]);
 
   const carregarDados = async () => {
     try {
@@ -109,7 +116,6 @@ export default function HomeScreen({ navigation }) {
             <TouchableOpacity
               key={treino.id}
               style={styles.card}
-              onPress={() => navigation.navigate('DetalhesTreino', { id: treino.id })}
             >
               <View style={styles.cardIcon}>
                 <Ionicons
@@ -155,7 +161,6 @@ export default function HomeScreen({ navigation }) {
             <TouchableOpacity
               key={desafio.id}
               style={styles.challengeCard}
-              onPress={() => navigation.navigate('DetalhesDesafio', { id: desafio.id })}
             >
               <View style={styles.challengeHeader}>
                 <Text style={styles.challengeTitle}>{desafio.titulo}</Text>

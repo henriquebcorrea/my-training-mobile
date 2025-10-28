@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  TouchableOpacity,
-  ActivityIndicator,
-  RefreshControl,
-  Alert,
-} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import treinoService from '../services/treinoService';
+import { useEffect, useState } from 'react';
+import {
+  ActivityIndicator,
+  Alert,
+  FlatList,
+  RefreshControl,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+// MODO MOCK - Trocar para services reais quando backend estiver pronto
+import { mockTreinoService as treinoService } from '../services/mockData';
 
 export default function TreinosScreen({ navigation }) {
   const [treinos, setTreinos] = useState([]);
@@ -21,6 +22,7 @@ export default function TreinosScreen({ navigation }) {
     carregarTreinos();
   }, []);
 
+  // Recarregar quando voltar para a tela
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       carregarTreinos();
@@ -101,10 +103,7 @@ export default function TreinosScreen({ navigation }) {
   };
 
   const renderItem = ({ item }) => (
-    <TouchableOpacity
-      style={styles.card}
-      onPress={() => navigation.navigate('DetalhesTreino', { id: item.id })}
-    >
+    <TouchableOpacity style={styles.card}>
       <View style={styles.cardIcon}>
         <Ionicons
           name={getIconeTipo(item.tipo)}

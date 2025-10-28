@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  TouchableOpacity,
-  ActivityIndicator,
-  RefreshControl,
-  Alert,
-} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import desafioService from '../services/desafioService';
+import { useEffect, useState } from 'react';
+import {
+  ActivityIndicator,
+  Alert,
+  FlatList,
+  RefreshControl,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+// MODO MOCK - Trocar para services reais quando backend estiver pronto
+import { mockDesafioService as desafioService } from '../services/mockData';
 
 export default function DesafiosScreen({ navigation }) {
   const [desafios, setDesafios] = useState([]);
@@ -124,7 +125,6 @@ export default function DesafiosScreen({ navigation }) {
   const renderItem = ({ item }) => (
     <TouchableOpacity
       style={[styles.card, { borderLeftColor: getCorStatus(item.status) }]}
-      onPress={() => navigation.navigate('DetalhesDesafio', { id: item.id })}
     >
       <View style={styles.cardHeader}>
         <View style={styles.cardHeaderLeft}>
@@ -197,12 +197,6 @@ export default function DesafiosScreen({ navigation }) {
           </View>
         }
       />
-      <TouchableOpacity
-        style={styles.fab}
-        onPress={() => navigation.navigate('NovoDesafio')}
-      >
-        <Ionicons name="add" size={32} color="#fff" />
-      </TouchableOpacity>
     </View>
   );
 }
@@ -326,21 +320,5 @@ const styles = StyleSheet.create({
     color: '#999',
     marginTop: 8,
     textAlign: 'center',
-  },
-  fab: {
-    position: 'absolute',
-    right: 20,
-    bottom: 20,
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: '#007AFF',
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
-    elevation: 8,
   },
 });
