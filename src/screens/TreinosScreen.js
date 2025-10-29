@@ -10,8 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-// MODO MOCK - Trocar para services reais quando backend estiver pronto
-import { mockTreinoService as treinoService } from '../services/mockData';
+import treinoService from '../services/treinoService';
 
 export default function TreinosScreen({ navigation }) {
   const [treinos, setTreinos] = useState([]);
@@ -103,7 +102,10 @@ export default function TreinosScreen({ navigation }) {
   };
 
   const renderItem = ({ item }) => (
-    <TouchableOpacity style={styles.card}>
+    <TouchableOpacity 
+      style={styles.card}
+      onPress={() => navigation.navigate('TreinoDetalhes', { treinoId: item.id })}
+    >
       <View style={styles.cardIcon}>
         <Ionicons
           name={getIconeTipo(item.tipo)}

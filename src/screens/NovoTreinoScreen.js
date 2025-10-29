@@ -10,8 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-// MODO MOCK - Trocar para services reais quando backend estiver pronto
-import { mockTreinoService as treinoService } from '../services/mockData';
+import treinoService from '../services/treinoService';
 
 export default function NovoTreinoScreen({ navigation }) {
   const [tipo, setTipo] = useState('MUSCULACAO');

@@ -9,8 +9,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-// MODO MOCK - Trocar para services reais quando backend estiver pronto
-import { mockDesafioService as desafioService, mockTreinoService as treinoService } from '../services/mockData';
+import desafioService from '../services/desafioService';
+import treinoService from '../services/treinoService';
 
 export default function HomeScreen({ navigation }) {
   const [treinos, setTreinos] = useState([]);
@@ -37,7 +37,7 @@ export default function HomeScreen({ navigation }) {
         desafioService.listarTodos(),
       ]);
       setTreinos(treinosData.slice(0, 5)); // Últimos 5 treinos
-      setDesafios(desafiosData.filter(d => d.status === 'ATIVO').slice(0, 3));
+      setDesafios(desafiosData.filter(d => d.status === 'PENDENTE').slice(0, 3));
     } catch (error) {
       console.error('Erro ao carregar dados:', error);
     } finally {
@@ -116,6 +116,7 @@ export default function HomeScreen({ navigation }) {
             <TouchableOpacity
               key={treino.id}
               style={styles.card}
+              onPress={() => navigation.navigate('TreinoDetalhes', { treinoId: treino.id })}
             >
               <View style={styles.cardIcon}>
                 <Ionicons

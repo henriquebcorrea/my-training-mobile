@@ -5,7 +5,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import DesafiosScreen from '../screens/DesafiosScreen';
 import HomeScreen from '../screens/HomeScreen';
+import NovoDesafioScreen from '../screens/NovoDesafioScreen';
 import NovoTreinoScreen from '../screens/NovoTreinoScreen';
+import TreinoDetalhesScreen from '../screens/TreinoDetalhesScreen';
 import TreinosScreen from '../screens/TreinosScreen';
 
 const Stack = createNativeStackNavigator();
@@ -101,6 +103,21 @@ export default function AppNavigator() {
           component={NovoTreinoScreen}
           options={{
             title: 'Novo Treino',
+            presentation: 'modal',
+          }}
+        />
+        <Stack.Screen
+          name="TreinoDetalhes"
+          component={TreinoDetalhesScreen}
+          options={{
+            title: 'Detalhes do Treino',
+          }}
+        />
+        <Stack.Screen
+          name="NovoDesafio"
+          component={NovoDesafioScreen}
+          options={{
+            title: 'Novo Desafio',
             presentation: 'modal',
           }}
         />

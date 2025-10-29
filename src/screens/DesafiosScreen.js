@@ -4,20 +4,24 @@ import {
   ActivityIndicator,
   Alert,
   FlatList,
+  Modal,
   RefreshControl,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
-// MODO MOCK - Trocar para services reais quando backend estiver pronto
-import { mockDesafioService as desafioService } from '../services/mockData';
+import desafioService from '../services/desafioService';
 
 export default function DesafiosScreen({ navigation }) {
   const [desafios, setDesafios] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [filtroStatus, setFiltroStatus] = useState('TODOS');
+  const [modalProgresso, setModalProgresso] = useState(false);
+  const [desafioSelecionado, setDesafioSelecionado] = useState(null);
+  const [valorAdicionar, setValorAdicionar] = useState('');
 
   useEffect(() => {
     carregarDesafios();
@@ -52,6 +56,106 @@ export default function DesafiosScreen({ navigation }) {
   const onRefresh = () => {
     setRefreshing(true);
     carregarDesafios();
+  };
+
+  const alterarStatusDesafio = async (id, novoStatus) => {
+    try {
+      const desafio = desafios.find(d => d.id === id);
+      if (!desafio) return;
+
+      const dadosAtualizados = {
+        ...desafio,
+        status: novoStatus,
+      };
+
+      await desafioService.atualizar(id, dadosAtualizados);
+      
+      // Atualizar a lista local
+      setDesafios(desafios.map(d => 
+        d.id === id ? { ...d, status: novoStatus } : d
+      ));
+      
+      Alert.alert('Sucesso', `Status alterado para ${novoStatus}`);
+    } catch (error) {
+      console.error('Erro ao alterar status:', error);
+      Alert.alert('Erro', 'Não foi possível alterar o status do desafio');
+    }
+  };
+
+  const mostrarOpcoesStatus = (id) => {
+    Alert.alert(
+      'Alterar Status',
+      'Escolha o novo status do desafio:',
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        { text: 'Pendente', onPress: () => alterarStatusDesafio(id, 'PENDENTE') },
+        { text: 'Concluído', onPress: () => alterarStatusDesafio(id, 'CONCLUIDO') },
+        { text: 'Cancelado', onPress: () => alterarStatusDesafio(id, 'CANCELADO') },
+      ]
+    );
+  };
+
+  const atualizarProgresso = async (id) => {
+    const desafio = desafios.find(d => d.id === id);
+    if (!desafio) return;
+
+    // Verificar se o desafio já está concluído
+    if (desafio.status === 'CONCLUIDO') {
+      Alert.alert('Desafio Concluído', 'Este desafio já foi concluído e não pode mais ser atualizado.');
+      return;
+    }
+
+    setDesafioSelecionado(desafio);
+    setValorAdicionar('');
+    setModalProgresso(true);
+  };
+
+  const executarAtualizacao = async (valorAdicionar) => {
+    if (!desafioSelecionado) return;
+    
+    if (!valorAdicionar || isNaN(parseFloat(valorAdicionar))) {
+      Alert.alert('Erro', 'Digite um valor válido para adicionar');
+      return;
+    }
+
+    const valorAdicionarNum = parseFloat(valorAdicionar);
+    const progressoAtual = desafioSelecionado.progressoAtual || 0;
+    const novoProgresso = progressoAtual + valorAdicionarNum;
+
+    try {
+      const dadosAtualizados = {
+        ...desafioSelecionado,
+        progressoAtual: novoProgresso,
+      };
+
+      console.log('Enviando dados:', dadosAtualizados);
+      
+      const resultado = await desafioService.atualizar(desafioSelecionado.id, dadosAtualizados);
+      console.log('Resultado da atualização:', resultado);
+      
+      // Atualizar a lista local
+      setDesafios(desafios.map(d => 
+        d.id === desafioSelecionado.id ? { ...d, progressoAtual: novoProgresso } : d
+      ));
+      
+      // Verificar se foi concluído automaticamente
+      if (novoProgresso >= desafioSelecionado.objetivoValor) {
+        Alert.alert('Parabéns!', 'Desafio concluído automaticamente!');
+        setDesafios(desafios.map(d => 
+          d.id === desafioSelecionado.id ? { ...d, progressoAtual: novoProgresso, status: 'CONCLUIDO' } : d
+        ));
+      } else {
+        Alert.alert('Sucesso', `Adicionado ${valorAdicionarNum} ${desafioSelecionado.unidade} ao progresso!`);
+      }
+      
+      // Fechar modal
+      setModalProgresso(false);
+      setDesafioSelecionado(null);
+      setValorAdicionar('');
+    } catch (error) {
+      console.error('Erro ao atualizar progresso:', error);
+      Alert.alert('Erro', 'Não foi possível atualizar o progresso: ' + error.message);
+    }
   };
 
   const deletarDesafio = async (id) => {
@@ -100,7 +204,7 @@ export default function DesafiosScreen({ navigation }) {
 
   const renderFiltro = () => (
     <View style={styles.filtrosContainer}>
-      {['TODOS', 'ATIVO', 'CONCLUIDO', 'PENDENTE', 'CANCELADO'].map((status) => (
+      {['TODOS', 'CONCLUIDO', 'PENDENTE', 'CANCELADO'].map((status) => (
         <TouchableOpacity
           key={status}
           style={[
@@ -131,18 +235,63 @@ export default function DesafiosScreen({ navigation }) {
           <Ionicons name="trophy" size={24} color={getCorStatus(item.status)} />
           <Text style={styles.cardTitle}>{item.titulo}</Text>
         </View>
-        <TouchableOpacity
-          style={styles.deleteButton}
-          onPress={() => deletarDesafio(item.id)}
-        >
-          <Ionicons name="trash-outline" size={20} color="#FF3B30" />
-        </TouchableOpacity>
+        <View style={styles.cardActions}>
+          <TouchableOpacity
+            style={[
+              styles.actionButton,
+              item.status === 'CONCLUIDO' && styles.actionButtonDisabled
+            ]}
+            onPress={() => atualizarProgresso(item.id)}
+            disabled={item.status === 'CONCLUIDO'}
+          >
+            <Ionicons 
+              name="add-circle" 
+              size={20} 
+              color={item.status === 'CONCLUIDO' ? '#ccc' : '#4CAF50'} 
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.actionButton}
+            onPress={() => mostrarOpcoesStatus(item.id)}
+          >
+            <Ionicons name="swap-horizontal" size={20} color="#007AFF" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.actionButton}
+            onPress={() => deletarDesafio(item.id)}
+          >
+            <Ionicons name="trash-outline" size={20} color="#FF3B30" />
+          </TouchableOpacity>
+        </View>
       </View>
 
       <View style={styles.statusBadge}>
         <Text style={[styles.statusText, { color: getCorStatus(item.status) }]}>
           {item.status}
         </Text>
+      </View>
+
+      {/* Barra de Progresso */}
+      <View style={styles.progressContainer}>
+        <View style={styles.progressInfo}>
+          <Text style={styles.progressText}>
+            {item.progressoAtual || 0} / {item.objetivoValor} {item.unidade}
+          </Text>
+          <Text style={styles.progressPercentage}>
+            {Math.round(((item.progressoAtual || 0) / item.objetivoValor) * 100)}%
+          </Text>
+        </View>
+        <View style={styles.progressBar}>
+          <View 
+            style={[
+              styles.progressFill, 
+              { 
+                width: `${Math.min(((item.progressoAtual || 0) / item.objetivoValor) * 100, 100)}%`,
+                backgroundColor: item.status === 'CONCLUIDO' ? '#4CAF50' : '#007AFF'
+              }
+            ]} 
+          />
+        </View>
       </View>
 
       {item.descricao && (
@@ -197,6 +346,74 @@ export default function DesafiosScreen({ navigation }) {
           </View>
         }
       />
+      <TouchableOpacity
+        style={styles.fab}
+        onPress={() => navigation.navigate('NovoDesafio')}
+      >
+        <Ionicons name="add" size={32} color="#fff" />
+      </TouchableOpacity>
+
+      {/* Modal para atualizar progresso */}
+      <Modal
+        visible={modalProgresso}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setModalProgresso(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>
+              Adicionar ao Progresso
+            </Text>
+            
+            {desafioSelecionado && (
+              <>
+                <Text style={styles.modalSubtitle}>
+                  {desafioSelecionado.titulo}
+                </Text>
+                <Text style={styles.modalInfo}>
+                  Objetivo: {desafioSelecionado.objetivoValor} {desafioSelecionado.unidade}
+                </Text>
+                <Text style={styles.modalInfo}>
+                  Progresso atual: {desafioSelecionado.progressoAtual || 0} {desafioSelecionado.unidade}
+                </Text>
+                <Text style={styles.modalInfo}>
+                  Restam: {(desafioSelecionado.objetivoValor - (desafioSelecionado.progressoAtual || 0)).toFixed(1)} {desafioSelecionado.unidade}
+                </Text>
+                
+                <TextInput
+                  style={styles.modalInput}
+                  value={valorAdicionar}
+                  onChangeText={setValorAdicionar}
+                  placeholder={`Quantidade a adicionar (${desafioSelecionado.unidade})`}
+                  keyboardType="decimal-pad"
+                  autoFocus={true}
+                />
+                
+                <View style={styles.modalButtons}>
+                  <TouchableOpacity
+                    style={[styles.modalButton, styles.modalButtonCancel]}
+                    onPress={() => {
+                      setModalProgresso(false);
+                      setDesafioSelecionado(null);
+                      setValorAdicionar('');
+                    }}
+                  >
+                    <Text style={styles.modalButtonCancelText}>Cancelar</Text>
+                  </TouchableOpacity>
+                  
+                  <TouchableOpacity
+                    style={[styles.modalButton, styles.modalButtonConfirm]}
+                    onPress={() => executarAtualizacao(valorAdicionar)}
+                  >
+                    <Text style={styles.modalButtonConfirmText}>Adicionar</Text>
+                  </TouchableOpacity>
+                </View>
+              </>
+            )}
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -270,8 +487,15 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     flex: 1,
   },
-  deleteButton: {
-    padding: 5,
+  cardActions: {
+    flexDirection: 'row',
+    gap: 5,
+  },
+  actionButton: {
+    padding: 8,
+  },
+  actionButtonDisabled: {
+    opacity: 0.5,
   },
   statusBadge: {
     alignSelf: 'flex-start',
@@ -320,5 +544,122 @@ const styles = StyleSheet.create({
     color: '#999',
     marginTop: 8,
     textAlign: 'center',
+  },
+  fab: {
+    position: 'absolute',
+    right: 20,
+    bottom: 20,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#007AFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 8,
+  },
+  progressContainer: {
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  progressInfo: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 5,
+  },
+  progressText: {
+    fontSize: 14,
+    color: '#666',
+    fontWeight: '600',
+  },
+  progressPercentage: {
+    fontSize: 14,
+    color: '#007AFF',
+    fontWeight: 'bold',
+  },
+  progressBar: {
+    height: 8,
+    backgroundColor: '#E0E0E0',
+    borderRadius: 4,
+    overflow: 'hidden',
+  },
+  progressFill: {
+    height: '100%',
+    borderRadius: 4,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 20,
+    width: '90%',
+    maxWidth: 400,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 10,
+    color: '#333',
+  },
+  modalSubtitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    textAlign: 'center',
+    marginBottom: 5,
+    color: '#007AFF',
+  },
+  modalInfo: {
+    fontSize: 14,
+    textAlign: 'center',
+    marginBottom: 5,
+    color: '#666',
+  },
+  modalInput: {
+    backgroundColor: '#f9f9f9',
+    padding: 15,
+    borderRadius: 8,
+    fontSize: 16,
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+    marginVertical: 15,
+    textAlign: 'center',
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  modalButton: {
+    flex: 1,
+    padding: 15,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  modalButtonCancel: {
+    backgroundColor: '#f0f0f0',
+    borderWidth: 1,
+    borderColor: '#ccc',
+  },
+  modalButtonConfirm: {
+    backgroundColor: '#007AFF',
+  },
+  modalButtonCancelText: {
+    color: '#666',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  modalButtonConfirmText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
