@@ -37,12 +37,12 @@ export default function DesafiosScreen({ navigation }) {
   const carregarDesafios = async () => {
     try {
       setLoading(true);
-      let data;
-      if (filtroStatus === 'TODOS') {
-        data = await desafioService.listarTodos();
-      } else {
-        data = await desafioService.buscarPorStatus(filtroStatus);
+      let data = await desafioService.listarMeusDesafios();
+      
+      if (filtroStatus !== 'TODOS') {
+        data = data.filter(d => d.status === filtroStatus);
       }
+      
       setDesafios(data);
     } catch (error) {
       console.error('Erro ao carregar desafios:', error);
@@ -70,7 +70,6 @@ export default function DesafiosScreen({ navigation }) {
 
       await desafioService.atualizar(id, dadosAtualizados);
       
-      // Atualizar a lista local
       setDesafios(desafios.map(d => 
         d.id === id ? { ...d, status: novoStatus } : d
       ));
@@ -99,7 +98,6 @@ export default function DesafiosScreen({ navigation }) {
     const desafio = desafios.find(d => d.id === id);
     if (!desafio) return;
 
-    // Verificar se o desafio já está concluído
     if (desafio.status === 'CONCLUIDO') {
       Alert.alert('Desafio Concluído', 'Este desafio já foi concluído e não pode mais ser atualizado.');
       return;
@@ -128,17 +126,12 @@ export default function DesafiosScreen({ navigation }) {
         progressoAtual: novoProgresso,
       };
 
-      console.log('Enviando dados:', dadosAtualizados);
+      await desafioService.atualizar(desafioSelecionado.id, dadosAtualizados);
       
-      const resultado = await desafioService.atualizar(desafioSelecionado.id, dadosAtualizados);
-      console.log('Resultado da atualização:', resultado);
-      
-      // Atualizar a lista local
       setDesafios(desafios.map(d => 
         d.id === desafioSelecionado.id ? { ...d, progressoAtual: novoProgresso } : d
       ));
       
-      // Verificar se foi concluído automaticamente
       if (novoProgresso >= desafioSelecionado.objetivoValor) {
         Alert.alert('Parabéns!', 'Desafio concluído automaticamente!');
         setDesafios(desafios.map(d => 
@@ -148,7 +141,6 @@ export default function DesafiosScreen({ navigation }) {
         Alert.alert('Sucesso', `Adicionado ${valorAdicionarNum} ${desafioSelecionado.unidade} ao progresso!`);
       }
       
-      // Fechar modal
       setModalProgresso(false);
       setDesafioSelecionado(null);
       setValorAdicionar('');

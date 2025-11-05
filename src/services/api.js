@@ -1,4 +1,5 @@
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import config from '../config/environment';
 
 const api = axios.create({
@@ -10,8 +11,11 @@ const api = axios.create({
 });
 
 api.interceptors.request.use(
-  (config) => {
-    console.log('Requisição:', config.method.toUpperCase(), config.url);
+  async (config) => {
+    const token = await AsyncStorage.getItem('@mytraining:token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
     return config;
   },
   (error) => {
@@ -21,13 +25,13 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
+  async (error) => {
     if (error.response) {
-      console.error('Erro na resposta:', error.response.status, error.response.data);
-    } else if (error.request) {
-      console.error('Erro na requisição:', error.request);
-    } else {
-      console.error('Erro:', error.message);
+      // Se o token expirou (401), limpar storage
+      if (error.response.status === 401) {
+        await AsyncStorage.removeItem('@mytraining:token');
+        await AsyncStorage.removeItem('@mytraining:user');
+      }
     }
     return Promise.reject(error);
   }

@@ -19,9 +19,6 @@ export default function NovoTreinoScreen({ navigation }) {
   const [observacoes, setObservacoes] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Dados fixos para teste - SUBSTITUA pelo ID do usuário logado
-  const USUARIO_ID = 1;
-
   const tiposTreino = [
     { value: 'MUSCULACAO', label: 'Musculação', icon: 'barbell' },
     { value: 'CORRIDA', label: 'Corrida', icon: 'walk' },
@@ -48,7 +45,7 @@ export default function NovoTreinoScreen({ navigation }) {
         duracaoMin: parseInt(duracaoMin),
         observacoes: observacoes || null,
         distanciaKm: distanciaKm ? parseFloat(distanciaKm) : null,
-        usuarioId: USUARIO_ID,
+        usuarioId: null, // Será definido pelo backend usando o usuário autenticado
         exercicios: [],
       };
 

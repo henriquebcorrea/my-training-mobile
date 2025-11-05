@@ -1,7 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
+  Alert,
   RefreshControl,
   ScrollView,
   StyleSheet,
@@ -9,10 +10,12 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { AuthContext } from '../contexts/AuthContext';
 import desafioService from '../services/desafioService';
 import treinoService from '../services/treinoService';
 
 export default function HomeScreen({ navigation }) {
+  const { user, logout } = useContext(AuthContext);
   const [treinos, setTreinos] = useState([]);
   const [desafios, setDesafios] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -33,17 +36,34 @@ export default function HomeScreen({ navigation }) {
     try {
       setLoading(true);
       const [treinosData, desafiosData] = await Promise.all([
-        treinoService.listarTodos(),
-        desafioService.listarTodos(),
+        treinoService.listarMeusTreinos(),
+        desafioService.listarMeusDesafios(),
       ]);
-      setTreinos(treinosData.slice(0, 5)); // Últimos 5 treinos
+      setTreinos(treinosData.slice(0, 5)); 
       setDesafios(desafiosData.filter(d => d.status === 'PENDENTE').slice(0, 3));
     } catch (error) {
-      console.error('Erro ao carregar dados:', error);
+      if (error.response?.status === 403 || error.response?.status === 401) {
+        await logout();
+      }
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
+  };
+
+  const handleLogout = () => {
+    Alert.alert(
+      'Sair',
+      'Tem certeza que deseja sair?',
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        {
+          text: 'Sair',
+          style: 'destructive',
+          onPress: logout,
+        },
+      ]
+    );
   };
 
   const onRefresh = () => {
@@ -73,8 +93,17 @@ export default function HomeScreen({ navigation }) {
     >
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>MyTraining</Text>
-        <Text style={styles.headerSubtitle}>Bem-vindo de volta!</Text>
+        <View style={styles.headerTop}>
+          <View>
+            <Text style={styles.headerTitle}>MyTraining</Text>
+            <Text style={styles.headerSubtitle}>
+              {user ? `Olá, ${user.nome}!` : 'Bem-vindo de volta!'}
+            </Text>
+          </View>
+          <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
+            <Ionicons name="log-out-outline" size={24} color="#fff" />
+          </TouchableOpacity>
+        </View>
       </View>
 
       {/* Estatísticas rápidas */}
@@ -197,6 +226,11 @@ const styles = StyleSheet.create({
     paddingTop: 60,
     paddingBottom: 30,
   },
+  headerTop: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   headerTitle: {
     fontSize: 32,
     fontWeight: 'bold',
@@ -207,6 +241,9 @@ const styles = StyleSheet.create({
     color: '#fff',
     opacity: 0.9,
     marginTop: 5,
+  },
+  logoutButton: {
+    padding: 8,
   },
   statsContainer: {
     flexDirection: 'row',

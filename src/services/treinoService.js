@@ -46,6 +46,15 @@ const treinoService = {
     }
   },
 
+  listarMeusTreinos: async () => {
+    try {
+      const response = await api.get('/treinos/meus-treinos');
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
   atualizar: async (id, dados) => {
     try {
       const response = await api.put(`/treinos/${id}`, dados);

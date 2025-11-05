@@ -32,7 +32,7 @@ export default function TreinosScreen({ navigation }) {
   const carregarTreinos = async () => {
     try {
       setLoading(true);
-      const data = await treinoService.listarTodos();
+      const data = await treinoService.listarMeusTreinos();
       setTreinos(data);
     } catch (error) {
       console.error('Erro ao carregar treinos:', error);

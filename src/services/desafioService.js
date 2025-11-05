@@ -28,6 +28,15 @@ const desafioService = {
     }
   },
 
+  listarMeusDesafios: async () => {
+    try {
+      const response = await api.get('/desafios/meus-desafios');
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
   listarPaginado: async (page = 0, size = 10) => {
     try {
       const response = await api.get(`/desafios/paginado?page=${page}&size=${size}`);

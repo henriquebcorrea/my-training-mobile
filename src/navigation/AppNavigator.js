@@ -2,9 +2,13 @@ import { Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useContext } from 'react';
+import { View, ActivityIndicator, StyleSheet } from 'react-native';
 
+import { AuthContext } from '../contexts/AuthContext';
 import DesafiosScreen from '../screens/DesafiosScreen';
 import HomeScreen from '../screens/HomeScreen';
+import LoginScreen from '../screens/LoginScreen';
 import NovoDesafioScreen from '../screens/NovoDesafioScreen';
 import NovoTreinoScreen from '../screens/NovoTreinoScreen';
 import TreinoDetalhesScreen from '../screens/TreinoDetalhesScreen';
@@ -80,6 +84,16 @@ function TabNavigator() {
 }
 
 export default function AppNavigator() {
+  const { authenticated, loading } = useContext(AuthContext);
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#007AFF" />
+      </View>
+    );
+  }
+
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -93,35 +107,54 @@ export default function AppNavigator() {
           },
         }}
       >
-        <Stack.Screen
-          name="MainTabs"
-          component={TabNavigator}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="NovoTreino"
-          component={NovoTreinoScreen}
-          options={{
-            title: 'Novo Treino',
-            presentation: 'modal',
-          }}
-        />
-        <Stack.Screen
-          name="TreinoDetalhes"
-          component={TreinoDetalhesScreen}
-          options={{
-            title: 'Detalhes do Treino',
-          }}
-        />
-        <Stack.Screen
-          name="NovoDesafio"
-          component={NovoDesafioScreen}
-          options={{
-            title: 'Novo Desafio',
-            presentation: 'modal',
-          }}
-        />
+        {!authenticated ? (
+          <Stack.Screen
+            name="Login"
+            component={LoginScreen}
+            options={{ headerShown: false }}
+          />
+        ) : (
+          <>
+            <Stack.Screen
+              name="MainTabs"
+              component={TabNavigator}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="NovoTreino"
+              component={NovoTreinoScreen}
+              options={{
+                title: 'Novo Treino',
+                presentation: 'modal',
+              }}
+            />
+            <Stack.Screen
+              name="TreinoDetalhes"
+              component={TreinoDetalhesScreen}
+              options={{
+                title: 'Detalhes do Treino',
+              }}
+            />
+            <Stack.Screen
+              name="NovoDesafio"
+              component={NovoDesafioScreen}
+              options={{
+                title: 'Novo Desafio',
+                presentation: 'modal',
+              }}
+            />
+          </>
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+  },
+});
