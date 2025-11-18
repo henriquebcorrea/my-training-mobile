@@ -1,4 +1,3 @@
-// dados mockados para testar o app sem backend
 
 let treinos = [
   {

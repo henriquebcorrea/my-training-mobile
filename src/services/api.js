@@ -1,5 +1,5 @@
-import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 import config from '../config/environment';
 
 const api = axios.create({
@@ -7,6 +7,7 @@ const api = axios.create({
   timeout: config.TIMEOUT,
   headers: {
     'Content-Type': 'application/json',
+    'ngrok-skip-browser-warning': 'true', 
   },
 });
 
