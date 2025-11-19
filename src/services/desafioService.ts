@@ -2,7 +2,6 @@ import api from './api';
 
 const desafioService = {
   listarMeusDesafios: async () => {
-    // backend exposes `/desafios/meus-desafios` for the current user's desafios
     const response = await api.get('/desafios/meus-desafios');
     return response.data;
   },

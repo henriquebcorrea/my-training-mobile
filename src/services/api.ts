@@ -13,13 +13,11 @@ const api = axios.create({
 
 api.interceptors.request.use(
   async (reqConfig) => {
-    // log request method and url to help debug routing issues on backend
+      // attempt to attach token to request
     try {
       const token = await AsyncStorage.getItem('@mytraining:token');
       const method = (reqConfig.method ?? 'get').toString().toUpperCase();
       const url = reqConfig.url ?? '';
-      // eslint-disable-next-line no-console
-      console.log(`[api] ${method} ${url} Auth:${!!token} TokenTail:${token ? token.slice(-6) : 'none'}`);
 
       if (token) {
         (reqConfig as any).headers = reqConfig.headers ?? {};
@@ -40,12 +38,9 @@ api.interceptors.response.use(
   (response) => response,
   async (error) => {
     if (error.response) {
-      // log response errors for visibility
+      // response error handling
       try {
-        // eslint-disable-next-line no-console
-        console.log(`[api][resp] ${error.config?.method?.toUpperCase() ?? 'GET'} ${error.config?.url} => ${error.response.status}`);
-        // eslint-disable-next-line no-console
-        console.log('[api][resp].data', error.response.data);
+        // keep silent in normal operation; details available in error object
       } catch (e) {
         // ignore
       }
@@ -55,9 +50,7 @@ api.interceptors.response.use(
         await AsyncStorage.removeItem('@mytraining:user');
       }
       if (error.response.status === 403) {
-        // optional: log that request was forbidden
-        // eslint-disable-next-line no-console
-        console.warn('[api] request forbidden (403) for', error.config?.url);
+        // request forbidden; no logging in production
       }
     }
     return Promise.reject(error);

@@ -17,10 +17,6 @@ export const AuthProvider = ({ children }: any) => {
       const userData = await authService.getUser();
       const token = await authService.getToken();
       try {
-        // eslint-disable-next-line no-console
-        console.log('[auth] loaded user', userData ? { id: userData.id, nome: userData.nome } : null);
-        // eslint-disable-next-line no-console
-        console.log('[auth] loaded token present?', !!token, token ? `tail:${token.slice(-6)}` : 'none');
         // decode JWT payload if possible to ensure token subject matches stored user
         if (token && userData) {
           try {
@@ -38,14 +34,11 @@ export const AuthProvider = ({ children }: any) => {
                 // try common fields
                 const subject = obj.sub ?? obj.userId ?? obj.id ?? obj.usuarioId ?? null;
                 const emailInToken = obj.email ?? obj.preferred_username ?? null;
-                // eslint-disable-next-line no-console
-                console.log('[auth] token subject:', subject, 'emailInToken:', emailInToken);
                 const subjectMatchesId = subject !== undefined && subject !== null && String(subject) === String(userData.id);
                 const subjectMatchesEmail = (String(emailInToken) === String(userData.email)) || (String(subject) === String(userData.email));
                 if (!subjectMatchesId && !subjectMatchesEmail) {
                   // token doesn't match stored user => clear inconsistent state
-                  // eslint-disable-next-line no-console
-                  console.warn('[auth] token subject/email does not match stored user — clearing auth state');
+                  // token doesn't match stored user — clear auth state
                   await authService.logout();
                   setAuthenticated(false);
                   setUser(null);

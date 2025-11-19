@@ -1,32 +1,94 @@
 import api from './api';
-import authService from './authService';
+
+export interface Treino {
+  id?: number;
+  nome?: string;
+  descricao?: string;
+  usuarioId?: number;
+}
+
+export interface PaginacaoResponse<T> {
+  content: T[];
+  totalPages: number;
+  totalElements: number;
+  size: number;
+  number: number;
+}
 
 const treinoService = {
-  listarMeusTreinos: async () => {
-    const user = await authService.getUser();
-    if (!user || !user.id) {
-      // fallback to backend route that lists current user's treinos
-      const response = await api.get('/treinos/meus-treinos');
-      return response.data;
+  criar: async (dados: Treino): Promise<Treino> => {
+    try {
+      const response = await api.post('/treinos', dados);
+      return response.data as Treino;
+    } catch (error) {
+      throw error;
     }
-    const response = await api.get(`/treinos/usuario/${user.id}`);
-    return response.data;
   },
-  detalhes: async (treinoId: any) => {
-    const response = await api.get(`/treinos/${treinoId}`);
-    return response.data;
+
+  buscarPorId: async (id: number): Promise<Treino> => {
+    try {
+      const response = await api.get(`/treinos/${id}`);
+      return response.data as Treino;
+    } catch (error) {
+      throw error;
+    }
   },
-  buscarPorId: async (id: any) => {
-    const response = await api.get(`/treinos/${id}`);
-    return response.data;
+
+  listarTodos: async (): Promise<Treino[]> => {
+    try {
+      const response = await api.get('/treinos');
+      return response.data as Treino[];
+    } catch (error) {
+      throw error;
+    }
   },
-  criar: async (dados: any) => {
-    const response = await api.post('/treinos', dados);
-    return response.data;
+
+  listarPaginado: async (
+    page: number = 0,
+    size: number = 10
+  ): Promise<PaginacaoResponse<Treino>> => {
+    try {
+      const response = await api.get(`/treinos/paginado?page=${page}&size=${size}`);
+      return response.data as PaginacaoResponse<Treino>;
+    } catch (error) {
+      throw error;
+    }
   },
-  deletar: async (id: any) => {
-    const response = await api.delete(`/treinos/${id}`);
-    return response.data;
+
+  listarPorUsuario: async (usuarioId: number): Promise<Treino[]> => {
+    try {
+      const response = await api.get(`/treinos/usuario/${usuarioId}`);
+      return response.data as Treino[];
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  listarMeusTreinos: async (): Promise<Treino[]> => {
+    try {
+      const response = await api.get('/treinos/meus-treinos');
+      return response.data as Treino[];
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  atualizar: async (id: number, dados: Treino): Promise<Treino> => {
+    try {
+      const response = await api.put(`/treinos/${id}`, dados);
+      return response.data as Treino;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  deletar: async (id: number): Promise<boolean> => {
+    try {
+      await api.delete(`/treinos/${id}`);
+      return true;
+    } catch (error) {
+      throw error;
+    }
   },
 };
 

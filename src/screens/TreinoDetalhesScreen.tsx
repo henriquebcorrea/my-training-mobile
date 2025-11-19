@@ -53,18 +53,13 @@ export default function TreinoDetalhesScreen({ navigation, route }) {
       // log owner vs current user + token tail for debugging auth/permission mismatch
       try {
         const ownerId = treinoData?.usuarioId ?? treinoData?.usuario?.id ?? null;
-        const token = await authService.getToken();
-        // eslint-disable-next-line no-console
-        console.log('[treino] ownerId:', ownerId, 'currentUserId:', user?.id ?? null, 'tokenTail:', token ? token.slice(-6) : null);
-
-        // If treinoData indicates a different owner, deny write access (but still show treino)
+        // Define acesso de escrita baseado no dono do treino
         if (ownerId !== null && user && ownerId !== user.id) {
           setHasAccess(false);
         } else {
           setHasAccess(true);
         }
       } catch (e) {
-        // if logging fails, keep access conservative
         setHasAccess(false);
       }
 
@@ -74,8 +69,6 @@ export default function TreinoDetalhesScreen({ navigation, route }) {
       } catch (err: any) {
         // Se o backend retorna 403 (sem permissão), não bloqueia a exibição do treino
         if (err.response?.status === 403) {
-          // eslint-disable-next-line no-console
-          console.warn('Acesso negado aos exercícios deste treino', treinoId);
           setExercicios([]);
         } else {
           throw err;
@@ -324,12 +317,7 @@ export default function TreinoDetalhesScreen({ navigation, route }) {
 
   return (
     <View style={styles.container}>
-      {/* Debug banner: visibility of access and types (temporary) */}
-      <View style={styles.debugBanner}>
-        <Text style={styles.debugText}>hasAccess: {hasAccess ? 'true' : 'false'}</Text>
-        <Text style={styles.debugText}>treino.tipo: {treino?.tipo}</Text>
-        <Text style={styles.debugText}>user.id: {user?.id ?? 'null'}</Text>
-      </View>
+      {/* Debug banner removed for production UI */}
       {/* Header do Treino */}
       <View style={styles.treinoHeader}>
         <View style={styles.treinoInfo}>
@@ -472,6 +460,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     gap: 8,
+    backgroundColor: '#007AFF',
+    marginTop: 8,
   },
   adicionarButtonText: {
     color: '#fff',
