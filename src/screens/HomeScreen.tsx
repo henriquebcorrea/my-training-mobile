@@ -1,14 +1,14 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useContext, useEffect, useState } from 'react';
 import {
-  ActivityIndicator,
-  Alert,
-  RefreshControl,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
+    ActivityIndicator,
+    Alert,
+    RefreshControl,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
 } from 'react-native';
 import { AuthContext } from '../contexts/AuthContext';
 import desafioService from '../services/desafioService';
