@@ -4,7 +4,14 @@ export interface Treino {
   id?: number;
   nome?: string;
   descricao?: string;
-  usuarioId?: number;
+  usuario?: any;
+  usuarioId?: number | null;
+  dataHora?: string;
+  tipo?: string;
+  duracaoMin?: number;
+  observacoes?: string | null;
+  distanciaKm?: number | null;
+  exercicios?: any[];
 }
 
 export interface PaginacaoResponse<T> {

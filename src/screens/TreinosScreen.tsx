@@ -1,14 +1,14 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
 import {
-    ActivityIndicator,
-    Alert,
-    FlatList,
-    RefreshControl,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  Alert,
+  FlatList,
+  RefreshControl,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import treinoService from '../services/treinoService';
 
@@ -21,7 +21,6 @@ export default function TreinosScreen({ navigation }) {
     carregarTreinos();
   }, []);
 
-  // Recarregar quando voltar para a tela
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       carregarTreinos();

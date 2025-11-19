@@ -25,7 +25,6 @@ export default function TreinoDetalhesScreen({ navigation, route }) {
   const [adicionandoExercicio, setAdicionandoExercicio] = useState(false);
   const [hasAccess, setHasAccess] = useState(true);
   
-  // Formulário para novo exercício
   const [nomeExercicio, setNomeExercicio] = useState('');
   const [series, setSeries] = useState('');
   const [repeticoes, setRepeticoes] = useState('');
@@ -49,10 +48,8 @@ export default function TreinoDetalhesScreen({ navigation, route }) {
       const treinoData = await treinoService.buscarPorId(treinoId);
       setTreino(treinoData);
 
-      // log owner vs current user + token tail for debugging auth/permission mismatch
       try {
-        const ownerId = treinoData?.usuarioId ?? treinoData?.usuario?.id ?? null;
-        // Define acesso de escrita baseado no dono do treino
+        const ownerId = treinoData?.usuarioId ?? null;
         if (ownerId !== null && user && ownerId !== user.id) {
           setHasAccess(false);
         } else {
@@ -66,7 +63,6 @@ export default function TreinoDetalhesScreen({ navigation, route }) {
         const exerciciosData = await exercicioService.listarPorTreino(treinoId);
         setExercicios(exerciciosData);
       } catch (err: any) {
-        // Se o backend retorna 403 (sem permissão), não bloqueia a exibição do treino
         if (err.response?.status === 403) {
           setExercicios([]);
         } else {
@@ -111,14 +107,12 @@ export default function TreinoDetalhesScreen({ navigation, route }) {
 
       await exercicioService.criar(dadosExercicio);
       
-      // Limpar formulário
       setNomeExercicio('');
       setSeries('');
       setRepeticoes('');
       setCargaKg('');
       setObservacoesExercicio('');
       
-      // Recarregar dados
       await carregarDados();
       
       Alert.alert('Sucesso', 'Exercício adicionado com sucesso!');
@@ -206,7 +200,6 @@ export default function TreinoDetalhesScreen({ navigation, route }) {
   );
 
   const renderFormularioExercicio = () => {
-    // Só mostra formulário de exercícios para treinos de musculação e quando o usuário tem acesso
     if (treino?.tipo !== 'MUSCULACAO') {
       return (
         <View style={styles.formularioContainer}>
@@ -316,8 +309,6 @@ export default function TreinoDetalhesScreen({ navigation, route }) {
 
   return (
     <View style={styles.container}>
-      {/* Debug banner removed for production UI */}
-      {/* Header do Treino */}
       <View style={styles.treinoHeader}>
         <View style={styles.treinoInfo}>
           <Text style={styles.treinoTipo}>{treino.tipo}</Text>
@@ -329,10 +320,8 @@ export default function TreinoDetalhesScreen({ navigation, route }) {
         </View>
       </View>
 
-      {/* Formulário para adicionar exercício */}
       {renderFormularioExercicio()}
 
-      {/* Lista de Exercícios */}
       <View style={styles.exerciciosSection}>
         
         <Text style={styles.sectionTitle}>

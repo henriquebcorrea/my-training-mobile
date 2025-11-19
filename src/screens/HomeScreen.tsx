@@ -1,14 +1,14 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useContext, useEffect, useState } from 'react';
 import {
-    ActivityIndicator,
-    Alert,
-    RefreshControl,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  Alert,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import { AuthContext } from '../contexts/AuthContext';
 import desafioService from '../services/desafioService';
@@ -41,7 +41,6 @@ export default function HomeScreen({ navigation }) {
         treinoService.listarMeusTreinos(),
         desafioService.listarMeusDesafios(),
       ]);
-      // If treinos include owner info, filter defensively by current user
       let filteredTreinos = treinosData;
       try {
         if (user && treinosData && Array.isArray(treinosData)) {
@@ -52,7 +51,6 @@ export default function HomeScreen({ navigation }) {
           });
         }
       } catch (e) {
-        // ignore filter errors and fallback to returned list
       }
       setTreinos(filteredTreinos.slice(0, 5)); 
       setDesafios(desafiosData.filter(d => d.status === 'PENDENTE').slice(0, 3));
@@ -106,7 +104,6 @@ export default function HomeScreen({ navigation }) {
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
     >
-      {/* Header */}
       <View style={styles.header}>
         <View style={styles.headerTop}>
           <View>
@@ -121,7 +118,6 @@ export default function HomeScreen({ navigation }) {
         </View>
       </View>
 
-      {/* Estatísticas rápidas */}
       <View style={styles.statsContainer}>
         <View style={styles.statCard}>
           <Ionicons name="fitness" size={24} color="#007AFF" />
@@ -135,7 +131,6 @@ export default function HomeScreen({ navigation }) {
         </View>
       </View>
 
-      {/* Últimos Treinos */}
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>Últimos Treinos</Text>
@@ -162,16 +157,14 @@ export default function HomeScreen({ navigation }) {
               style={styles.card}
               onPress={async () => {
                 try {
-                  // validate owner before navigating
                   const detalhe = await treinoService.buscarPorId(treino.id);
-                  const ownerId = detalhe?.usuarioId ?? detalhe?.usuario?.id ?? null;
+                  const ownerId = detalhe?.usuarioId ?? detalhe?.usuario.id ?? null;
                   if (ownerId !== null && user && ownerId !== user.id) {
                     Alert.alert('Acesso negado', 'Você não tem permissão para ver este treino');
                     return;
                   }
                   navigation.navigate('TreinoDetalhes', { treinoId: treino.id });
                 } catch (err: any) {
-                  // if fetching details fails, still allow navigation (TreinoDetalhes has fallback handling)
                   navigation.navigate('TreinoDetalhes', { treinoId: treino.id });
                 }
               }}
@@ -201,7 +194,6 @@ export default function HomeScreen({ navigation }) {
         )}
       </View>
 
-      {/* Desafios Ativos */}
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>Desafios Ativos</Text>

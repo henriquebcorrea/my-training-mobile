@@ -1,14 +1,14 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
 import {
-    ActivityIndicator,
-    Alert,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  Alert,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import treinoService from '../services/treinoService';
 
@@ -45,7 +45,7 @@ export default function NovoTreinoScreen({ navigation }) {
         duracaoMin: parseInt(duracaoMin),
         observacoes: observacoes || null,
         distanciaKm: distanciaKm ? parseFloat(distanciaKm) : null,
-        usuarioId: null, // Será definido pelo backend usando o usuário autenticado
+        usuarioId: null,
         exercicios: [],
       };
 
