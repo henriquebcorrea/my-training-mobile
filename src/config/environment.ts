@@ -5,7 +5,7 @@ const environments = {
   },
   // Precisa rodar no cmd o ngrok, pegar no site o token, botar no cmd e rodar o ngrok na porta 8069
   device: {
-    API_URL: 'https://ungranulated-bambi-mythologically.ngrok-free.dev/api',
+    API_URL: 'https://fountained-latosha-presumptive.ngrok-free.dev/api',
     TIMEOUT: 15000,
   },
   

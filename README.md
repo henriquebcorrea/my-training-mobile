@@ -1,50 +1,310 @@
-# Welcome to your Expo app 👋
+# 📱 MyTraining Mobile
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+<div align="center">
 
-## Get started
+![React Native](https://img.shields.io/badge/React_Native-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Expo](https://img.shields.io/badge/Expo-000020?style=for-the-badge&logo=expo&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
 
-1. Install dependencies
+**Aplicativo mobile para gerenciamento de treinos e desafios fitness**
 
-   ```bash
-   npm install
-   ```
+[Características](#-características) •
+[Tecnologias](#-tecnologias) •
+[Instalação](#-instalação) •
+[Uso](#-como-usar) •
+[Estrutura](#-estrutura-do-projeto) •
+[API](#-conexão-com-backend)
 
-2. Start the app
+</div>
 
-   ```bash
-   npx expo start
-   ```
+---
 
-In the output, you'll find options to open the app in a
+## 📋 Sobre o Projeto
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+MyTraining Mobile é um aplicativo desenvolvido em React Native que permite aos usuários registrar seus treinos, acompanhar estatísticas e participar de desafios fitness. O app consome uma API REST desenvolvida em Spring Boot.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+### ✨ Características
 
-## Get a fresh project
+- 🏋️ **Gerenciamento de Treinos**: Crie, visualize e exclua treinos de musculação, corrida e ciclismo
+- 🏆 **Desafios**: Acompanhe desafios ativos, concluídos e pendentes
+- 📊 **Estatísticas**: Visualize suas estatísticas de treinos e desafios
+- 🔄 **Pull to Refresh**: Atualize os dados arrastando a tela para baixo
+- 📱 **Interface Intuitiva**: Design moderno e responsivo
+- 🎨 **Navegação Fluida**: Navegação por tabs e stack navigation
 
-When you're ready, run:
+---
 
+## 🛠️ Tecnologias
+
+Este projeto foi desenvolvido com as seguintes tecnologias:
+
+- **[React Native](https://reactnative.dev/)** - Framework para desenvolvimento mobile
+- **[Expo](https://expo.dev/)** - Plataforma para desenvolvimento React Native
+- **[React Navigation](https://reactnavigation.org/)** - Biblioteca de navegação
+- **[Axios](https://axios-http.com/)** - Cliente HTTP para requisições à API
+- **[Expo Vector Icons](https://docs.expo.dev/guides/icons/)** - Biblioteca de ícones
+
+---
+
+## 📦 Instalação
+
+### Pré-requisitos
+
+Antes de começar, você precisa ter instalado:
+
+- [Node.js](https://nodejs.org/) (versão 18 ou superior)
+- [npm](https://www.npmjs.com/) ou [yarn](https://yarnpkg.com/)
+- [Expo Go](https://expo.dev/client) instalado no seu celular (Android/iOS)
+
+### Passo a passo
+
+1. **Clone o repositório**
 ```bash
-npm run reset-project
+git clone https://github.com/henriquebcorrea/my-training-mobile.git
+cd my-training-mobile
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+2. **Instale as dependências**
+```bash
+npm install
+```
 
-## Learn more
+3. **Configure o endereço da API**
 
-To learn more about developing your project with Expo, look at the following resources:
+Abra o arquivo `src/services/api.js` e altere o IP para o IP da sua máquina:
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```javascript
+const API_URL = 'http://SEU_IP_AQUI:8080/api';
+```
 
-## Join the community
+> 💡 **Dica**: Para descobrir seu IP no Windows, execute `ipconfig` no CMD e procure por "Endereço IPv4"
 
-Join our community of developers creating universal apps.
+4. **Inicie o projeto**
+```bash
+npx expo start
+```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+5. **Abra no celular**
+   - Escaneie o QR Code que aparece no terminal usando o app **Expo Go**
+   - Certifique-se de que seu celular e computador estão na **mesma rede Wi-Fi**
+
+---
+
+## 🚀 Como Usar
+
+### Conectando com o Backend
+
+1. **Certifique-se de que o backend Spring Boot está rodando** na porta 8080
+
+2. **Atualize o IP** em `src/services/api.js` com o IP da sua máquina:
+```javascript
+const API_URL = 'http://192.168.X.X:8080/api';
+```
+
+3. **Inicie o aplicativo**:
+```bash
+npx expo start
+```
+
+4. **Abra no Expo Go** escaneando o QR Code
+
+> ⚠️ **Importante**: Seu celular e o computador com o backend devem estar na mesma rede Wi-Fi
+
+---
+
+## 📁 Estrutura do Projeto
+
+```
+mytraining-mobile/
+├── src/
+│   ├── components/          # Componentes reutilizáveis
+│   ├── navigation/          # Configuração de navegação
+│   │   └── AppNavigator.js  # Navegação principal
+│   ├── screens/             # Telas do aplicativo
+│   │   ├── HomeScreen.js    # Tela inicial
+│   │   ├── TreinosScreen.js # Lista de treinos
+│   │   ├── DesafiosScreen.js # Lista de desafios
+│   │   └── NovoTreinoScreen.js # Formulário de novo treino
+│   └── services/            # Serviços e API
+│       ├── api.js           # Configuração do Axios
+│       ├── mockData.js      # Dados para teste
+│       ├── treinoService.js # Serviço de treinos
+│       ├── desafioService.js # Serviço de desafios
+│       └── usuarioService.js # Serviço de usuários
+├── assets/                  # Imagens e recursos
+├── App.js                   # Componente principal
+├── app.json                 # Configuração do Expo
+├── package.json             # Dependências do projeto
+└── README.md                # Documentação
+```
+
+---
+
+## 🔌 Conexão com Backend
+
+### Endpoints utilizados
+
+O app consome os seguintes endpoints da API:
+
+#### **Treinos**
+- `GET /api/treinos` - Lista todos os treinos
+- `GET /api/treinos/{id}` - Busca treino por ID
+- `POST /api/treinos` - Cria novo treino
+- `PUT /api/treinos/{id}` - Atualiza treino
+- `DELETE /api/treinos/{id}` - Deleta treino
+- `GET /api/treinos/usuario/{usuarioId}` - Lista treinos por usuário
+
+#### **Desafios**
+- `GET /api/desafios` - Lista todos os desafios
+- `GET /api/desafios/{id}` - Busca desafio por ID
+- `POST /api/desafios` - Cria novo desafio
+- `PUT /api/desafios/{id}` - Atualiza desafio
+- `DELETE /api/desafios/{id}` - Deleta desafio
+- `GET /api/desafios/status/{status}` - Lista desafios por status
+
+#### **Usuários**
+- `GET /api/usuarios` - Lista todos os usuários
+- `GET /api/usuarios/{id}` - Busca usuário por ID
+- `POST /api/usuarios` - Cria novo usuário
+- `PUT /api/usuarios/{id}` - Atualiza usuário
+
+### Formato dos dados
+
+**Criar Treino:**
+```json
+{
+  "dataHora": "2025-10-21T19:30:00",
+  "tipo": "MUSCULACAO",
+  "duracaoMin": 60,
+  "observacoes": "Treino de peito",
+  "distanciaKm": null,
+  "usuarioId": 1,
+  "exercicios": []
+}
+```
+
+**Criar Desafio:**
+```json
+{
+  "titulo": "Desafio 30 dias",
+  "descricao": "Treinar todos os dias",
+  "dataInicio": "2025-10-01",
+  "dataFim": "2025-10-30",
+  "objetivoValor": 30,
+  "unidade": "REPETICOES",
+  "status": "ATIVO"
+}
+```
+
+---
+
+## 🎨 Telas do Aplicativo
+
+### 🏠 Home
+- Exibe estatísticas de treinos e desafios
+- Mostra últimos 5 treinos
+- Lista desafios ativos
+
+### 🏋️ Treinos
+- Lista completa de treinos
+- Filtros por tipo (Musculação, Corrida, Ciclismo)
+- Opção de excluir treinos
+- Botão flutuante para adicionar novo treino
+
+### 🏆 Desafios
+- Lista todos os desafios
+- Filtros por status (Ativo, Concluído, Pendente, Cancelado)
+- Indicador visual de status por cores
+- Opção de excluir desafios
+
+### ➕ Novo Treino
+- Seleção de tipo de treino
+- Campos para duração e distância
+- Campo de observações
+- Validação de campos obrigatórios
+
+---
+
+## 🐛 Resolução de Problemas
+
+### O app não conecta com o backend
+
+**Solução:**
+1. Verifique se o backend está rodando na porta 8080
+2. Confirme que celular e computador estão na mesma rede Wi-Fi
+3. Verifique se o IP em `api.js` está correto
+4. Desabilite firewall/antivírus temporariamente para testar
+
+### Erro "Network Error"
+
+**Solução:**
+1. Certifique-se de usar o IP correto (não use `localhost` ou `127.0.0.1`)
+2. Use o formato `http://192.168.X.X:8080/api`
+3. Verifique se não há proxy ou VPN ativa
+
+### App trava ao abrir
+
+**Solução:**
+```bash
+# Limpe o cache
+npx expo start -c
+
+# Reinstale dependências
+rm -rf node_modules
+npm install
+```
+
+---
+
+## 📝 Scripts Disponíveis
+
+```bash
+# Inicia o servidor de desenvolvimento
+npm start
+
+# Inicia com cache limpo
+npx expo start -c
+
+# Abre no Android
+npm run android
+
+# Abre no iOS
+npm run ios
+
+# Abre no navegador
+npm run web
+```
+
+---
+
+## 🤝 Contribuindo
+
+Contribuições são sempre bem-vindas!
+
+1. Faça um fork do projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
+
+---
+
+## 👥 Autores
+
+Desenvolvido por **Henrique Correa e Gustavo Rocha** como projeto do curso de Desenvolvimento de Sistemas.
+
+---
+
+## 📞 Suporte
+
+Se você tiver alguma dúvida ou problema, abra uma [issue](https://github.com/seu-usuario/mytraining-mobile/issues) no GitHub.
+
+---
+
+<div align="center">
+
+**Feito com ❤️ e React Native**
+
+⭐ Se este projeto te ajudou, considere dar uma estrela!
+
+</div>
