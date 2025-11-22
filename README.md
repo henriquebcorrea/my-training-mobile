@@ -201,27 +201,23 @@ O app consome os seguintes endpoints da API:
 ## 🎨 Telas do Aplicativo
 
 ### 🏠 Home
-- Exibe estatísticas de treinos e desafios
-- Mostra últimos 5 treinos
-- Lista desafios ativos
+<img width="397" height="853" alt="home" src="https://github.com/user-attachments/assets/645cd478-c426-4837-93db-029826423a47" />
 
 ### 🏋️ Treinos
-- Lista completa de treinos
-- Filtros por tipo (Musculação, Corrida, Ciclismo)
-- Opção de excluir treinos
-- Botão flutuante para adicionar novo treino
+<img width="397" height="857" alt="treinos" src="https://github.com/user-attachments/assets/dfadbd42-63c2-46b5-914a-7368692072e4" />
+
+### 🏋️ Criar treinos
+<img width="402" height="851" alt="criar_treino" src="https://github.com/user-attachments/assets/e53166c7-f8a4-4f67-bdca-24470f931cd2" />
+
+### 🏋️ Adicionar exercicios musculação
+<img width="400" height="857" alt="exercicios_musculacao" src="https://github.com/user-attachments/assets/30c0762c-b8c1-496a-ad41-3b9e540fddb7" />
 
 ### 🏆 Desafios
-- Lista todos os desafios
-- Filtros por status (Ativo, Concluído, Pendente, Cancelado)
-- Indicador visual de status por cores
-- Opção de excluir desafios
+<img width="408" height="858" alt="desafios" src="https://github.com/user-attachments/assets/104187e9-7306-4188-b42e-2c98adc8d612" />
 
-### ➕ Novo Treino
-- Seleção de tipo de treino
-- Campos para duração e distância
-- Campo de observações
-- Validação de campos obrigatórios
+### 🏆 Criar desafios
+<img width="411" height="859" alt="criar_desafio" src="https://github.com/user-attachments/assets/0fd86731-87e0-4ff7-b93d-486e0fd6b1a7" />
+
 
 ---
 
