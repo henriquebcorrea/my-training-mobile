@@ -11,8 +11,7 @@
 [Características](#-características) •
 [Tecnologias](#-tecnologias) •
 [Instalação](#-instalação) •
-[Uso](#-como-usar) •
-[API](#-conexão-com-backend)
+[Uso](#-como-usar) 
 
 </div>
 
