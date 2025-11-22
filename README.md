@@ -1,4 +1,4 @@
-# 📱 MyTraining Mobile
+# 📱 MyTraining
 
 <div align="center">
 
