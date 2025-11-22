@@ -12,7 +12,6 @@
 [Tecnologias](#-tecnologias) •
 [Instalação](#-instalação) •
 [Uso](#-como-usar) •
-[Estrutura](#-estrutura-do-projeto) •
 [API](#-conexão-com-backend)
 
 </div>
@@ -112,34 +111,6 @@ npx expo start
 
 ---
 
-## 📁 Estrutura do Projeto
-
-```
-mytraining-mobile/
-├── src/
-│   ├── components/          # Componentes reutilizáveis
-│   ├── navigation/          # Configuração de navegação
-│   │   └── AppNavigator.js  # Navegação principal
-│   ├── screens/             # Telas do aplicativo
-│   │   ├── HomeScreen.js    # Tela inicial
-│   │   ├── TreinosScreen.js # Lista de treinos
-│   │   ├── DesafiosScreen.js # Lista de desafios
-│   │   └── NovoTreinoScreen.js # Formulário de novo treino
-│   └── services/            # Serviços e API
-│       ├── api.js           # Configuração do Axios
-│       ├── mockData.js      # Dados para teste
-│       ├── treinoService.js # Serviço de treinos
-│       ├── desafioService.js # Serviço de desafios
-│       └── usuarioService.js # Serviço de usuários
-├── assets/                  # Imagens e recursos
-├── App.js                   # Componente principal
-├── app.json                 # Configuração do Expo
-├── package.json             # Dependências do projeto
-└── README.md                # Documentação
-```
-
----
-
 ## 🔌 Conexão com Backend
 
 ### Endpoints utilizados
@@ -203,17 +174,22 @@ O app consome os seguintes endpoints da API:
 ### 🏠 Home
 <img width="397" height="853" alt="home" src="https://github.com/user-attachments/assets/645cd478-c426-4837-93db-029826423a47" />
 
+
 ### 🏋️ Treinos
 <img width="397" height="857" alt="treinos" src="https://github.com/user-attachments/assets/dfadbd42-63c2-46b5-914a-7368692072e4" />
+
 
 ### 🏋️ Criar treinos
 <img width="402" height="851" alt="criar_treino" src="https://github.com/user-attachments/assets/e53166c7-f8a4-4f67-bdca-24470f931cd2" />
 
+
 ### 🏋️ Adicionar exercicios musculação
 <img width="400" height="857" alt="exercicios_musculacao" src="https://github.com/user-attachments/assets/30c0762c-b8c1-496a-ad41-3b9e540fddb7" />
 
+
 ### 🏆 Desafios
 <img width="408" height="858" alt="desafios" src="https://github.com/user-attachments/assets/104187e9-7306-4188-b42e-2c98adc8d612" />
+
 
 ### 🏆 Criar desafios
 <img width="411" height="859" alt="criar_desafio" src="https://github.com/user-attachments/assets/0fd86731-87e0-4ff7-b93d-486e0fd6b1a7" />
