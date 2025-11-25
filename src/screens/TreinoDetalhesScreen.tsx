@@ -308,42 +308,42 @@ export default function TreinoDetalhesScreen({ navigation, route }) {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.treinoHeader}>
-        <View style={styles.treinoInfo}>
-          <Text style={styles.treinoTipo}>{treino.tipo}</Text>
-          <Text style={styles.treinoData}>{formatarData(treino.dataHora)}</Text>
-          <Text style={styles.treinoDuracao}>{treino.duracaoMin} minutos</Text>
-          {treino.distanciaKm && (
-            <Text style={styles.treinoDistancia}>{treino.distanciaKm} km</Text>
-          )}
-        </View>
-      </View>
-
-      {renderFormularioExercicio()}
-
-      <View style={styles.exerciciosSection}>
-        
-        <Text style={styles.sectionTitle}>
-          Exercícios ({exercicios.length})
-        </Text>
-        
-        <FlatList
-          data={exercicios}
-          renderItem={renderExercicio}
-          keyExtractor={item => item.id.toString()}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
-          ListEmptyComponent={
-            <View style={styles.emptyContainer}>
-              <Ionicons name="barbell-outline" size={48} color="#ccc" />
-              <Text style={styles.emptyText}>Nenhum exercício adicionado</Text>
+    <FlatList
+      style={styles.container}
+      data={exercicios}
+      renderItem={renderExercicio}
+      keyExtractor={item => item.id.toString()}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+      ListHeaderComponent={
+        <>
+          <View style={styles.treinoHeader}>
+            <View style={styles.treinoInfo}>
+              <Text style={styles.treinoTipo}>{treino.tipo}</Text>
+              <Text style={styles.treinoData}>{formatarData(treino.dataHora)}</Text>
+              <Text style={styles.treinoDuracao}>{treino.duracaoMin} minutos</Text>
+              {treino.distanciaKm && (
+                <Text style={styles.treinoDistancia}>{treino.distanciaKm} km</Text>
+              )}
             </View>
-          }
-        />
-      </View>
-    </View>
+          </View>
+
+          {renderFormularioExercicio()}
+
+          <Text style={styles.sectionTitle}>
+            Exercícios ({exercicios.length})
+          </Text>
+        </>
+      }
+      ListEmptyComponent={
+        <View style={styles.emptyContainer}>
+          <Ionicons name="barbell-outline" size={48} color="#ccc" />
+          <Text style={styles.emptyText}>Nenhum exercício adicionado</Text>
+        </View>
+      }
+      contentContainerStyle={styles.listContent}
+    />
   );
 }
 
@@ -456,20 +456,22 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
-  exerciciosSection: {
-    flex: 1,
-    padding: 15,
+  listContent: {
+    paddingBottom: 20,
   },
   sectionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 15,
+    marginHorizontal: 15,
+    marginTop: 10,
   },
   exercicioCard: {
     backgroundColor: '#fff',
     padding: 15,
     borderRadius: 12,
     marginBottom: 10,
+    marginHorizontal: 15,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
